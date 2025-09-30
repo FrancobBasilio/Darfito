@@ -5,4 +5,5 @@ data class Usuario (
     var nombres : String = "",
     var apellidos : String = "",
     var correo : String = "",
-    var clave : String = "")
+    var clave : String = "",
+    val genero: String = "")

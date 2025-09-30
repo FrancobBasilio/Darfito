@@ -1,5 +1,6 @@
 package com.tuusuario.darfito
 
+import com.tuusuario.darfito.R
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -13,40 +14,24 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.tuusuario.darfito.repo.UsuariosRepository
 
 class AccesoActivity : AppCompatActivity() {
-    var tvRegistro: TextView?=null
-    private lateinit var tietCorreo : TextInputEditText
-    private lateinit var tietClave : TextInputEditText
-    private lateinit var tilCorreo : TextInputLayout
-    private lateinit var tilClave : TextInputLayout
-    private lateinit var btnAcceso : Button
 
-    //Lista simulada de usuarios (por ahora solo memoria)
-    private val listaUsuarios = mutableListOf(
-        Usuario(1, "Bryant Alejandro", "Yacila Valenzuela", "pbyacila@cibertec.edu.pe", "0000"),
-        Usuario(2, "Nombres", "Apellidos", "prueba@cibertec.edu.pe", "1234")
-    )
+    private var tvRegistro: TextView? = null
+    private lateinit var tietCorreo: TextInputEditText
+    private lateinit var tietClave: TextInputEditText
+    private lateinit var tilCorreo: TextInputLayout
+    private lateinit var tilClave: TextInputLayout
+    private lateinit var btnAcceso: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_acceso)
 
-        tvRegistro = findViewById(R.id.tvRegistro)
-        tietCorreo = findViewById(R.id.tietCorreo)
-        tietClave = findViewById(R.id.tietClave)
-        tilCorreo = findViewById(R.id.tilCorreo)
-        tilClave = findViewById(R.id.tilClave)
-        btnAcceso = findViewById(R.id.btnInicio)
-
-        btnAcceso.setOnClickListener {
-            validarCampos()
-        }
-
-        tvRegistro?.setOnClickListener {
-            cambioActivity(RegistroActivity::class.java)
-        }
+        inicializarVistas()
+        configurarListeners()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -55,77 +40,112 @@ class AccesoActivity : AppCompatActivity() {
         }
     }
 
-    fun validarCampos() {
+    private fun inicializarVistas() {
+        tvRegistro = findViewById(R.id.tvRegistro)
+        tietCorreo = findViewById(R.id.tietCorreo)
+        tietClave = findViewById(R.id.tietClave)
+        tilCorreo = findViewById(R.id.tilCorreo)
+        tilClave = findViewById(R.id.tilClave)
+        btnAcceso = findViewById(R.id.btnInicio)
+    }
+
+    private fun configurarListeners() {
+        btnAcceso.setOnClickListener {
+            validarCampos()
+        }
+
+        tvRegistro?.setOnClickListener {
+            cambioActivity(RegistroActivity::class.java)
+        }
+
+        // Limpiar errores al escribir
+        tietCorreo.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) tilCorreo.error = null
+        }
+        tietClave.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) tilClave.error = null
+        }
+    }
+
+    private fun validarCampos() {
         val correo = tietCorreo.text.toString().trim()
         val clave = tietClave.text.toString().trim()
-        var error : Boolean = false
+        var error = false
+
         if (correo.isEmpty()) {
             tilCorreo.error = "Ingrese un correo"
             error = true
         } else {
-            tilCorreo.error = ""
+            tilCorreo.error = null
         }
+
         if (clave.isEmpty()) {
             tilClave.error = "Ingrese contraseña"
             error = true
         } else {
-            tilClave.error = ""
+            tilClave.error = null
         }
 
         if (error) {
             return
         } else {
-            //Si pasa las validaciones
-            Toast.makeText(this, "Validación correcta. Procesando login...", Toast.LENGTH_LONG).show()
-
-            var usuarioEncontrado : Usuario ?= null
-//            for (i in 0 until listaUsuarios.size) {
-//                if (listaUsuarios[i].correo == correo + "@cibertec.edu.pe" && listaUsuarios[i].clave == clave) {
-//                    usuarioEncontrado = listaUsuarios[i]
-//                    break
-//                }
-//            }
-            for (u in listaUsuarios) {
-                if (u.correo == correo + "@cibertec.edu.pe" && u.clave == clave) {
-                    usuarioEncontrado = u
-                    break
-                }
-            }
-
-            if (usuarioEncontrado != null) {
-                Toast.makeText(this, "Bienvenido ${usuarioEncontrado.nombres}", Toast.LENGTH_LONG).show()
-                startActivity(Intent(this, HomeActivity::class.java))
-            } else {
-                Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show()
-            }
+            iniciarSesion(correo, clave)
         }
     }
 
-    fun cambioActivity(activityDestino : Class<out Activity>) {
+    private fun iniciarSesion(correo: String, clave: String) {
+        Toast.makeText(this, "Validación correcta. Procesando login...", Toast.LENGTH_SHORT).show()
+
+        // Buscar usuario en el repositorio compartido
+        val usuarioEncontrado = UsuariosRepository.buscarUsuario(correo, clave)
+
+        if (usuarioEncontrado != null) {
+            Toast.makeText(
+                this,
+                "Bienvenido ${usuarioEncontrado.nombres}",
+                Toast.LENGTH_LONG
+            ).show()
+
+            val intent = Intent(this, HomeActivity::class.java).apply {
+                putExtra("usuario_id", usuarioEncontrado.codigo)
+                putExtra("usuario_nombre", usuarioEncontrado.nombres)
+            }
+            startActivity(intent)
+            finish()
+        } else {
+            Toast.makeText(
+                this,
+                "Usuario o contraseña incorrectos",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun cambioActivity(activityDestino: Class<out Activity>) {
         val intent = Intent(this, activityDestino)
         startActivity(intent)
     }
 
-    fun abrirVentanaNavegador() {
+    private fun abrirVentanaNavegador() {
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.setData("http://www.google.com".toUri())
+        intent.data = "http://www.google.com".toUri()
         startActivity(intent)
     }
 
-    fun abrirBuscadorWeb() {
+    private fun abrirBuscadorWeb() {
         val intent = Intent(Intent.ACTION_WEB_SEARCH)
-        intent.setData("http://www.google.com".toUri())
+        intent.data = "http://www.google.com".toUri()
         startActivity(intent)
     }
 
-    fun abrirLlamada() {
+    private fun abrirLlamada() {
         val intent = Intent(Intent.ACTION_DIAL)
         startActivity(intent)
     }
 
-    fun llamar() {
+    private fun llamar() {
         val intent = Intent(Intent.ACTION_CALL)
-        intent.setData("tel:+51999999999".toUri())
+        intent.data = "tel:+51999999999".toUri()
         startActivity(intent)
     }
 }

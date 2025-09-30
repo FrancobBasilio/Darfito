@@ -195,6 +195,7 @@
         android:padding="8dp"
         tools:listitem="@layout/item_ranking" />
 
+
     <!-- Botón de jugar -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPlay"

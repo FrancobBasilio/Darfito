@@ -26,4 +26,7 @@
     <color name="correct_answer_color">#4CAF50</color>
     <color name="incorrect_answer_color">#F44336</color>
     <color name="timer_warning_color">#FF5722</color>
+
+
+
 </resources>
