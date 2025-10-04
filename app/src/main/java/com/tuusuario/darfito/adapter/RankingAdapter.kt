@@ -46,12 +46,12 @@ class RankingAdapter(
             tvPlayerName.text = player.name
             tvPlayerLevel.text = player.level
 
-            // Formatear el score con comas
+
             val formattedScore = NumberFormat.getNumberInstance(Locale.getDefault())
                 .format(player.score)
             tvPlayerScore.text = formattedScore
 
-            // Configurar avatar
+
             ivAvatar.setImageResource(R.drawable.ic_person)
 
 

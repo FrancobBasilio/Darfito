@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.androidx.navigation.safeargs)
 }
 
 android {
@@ -36,6 +37,13 @@ android {
 }
 
 dependencies {
+
+    val navVersion = "2.7.0"
+
+    //NavComponent
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:${navVersion}")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
