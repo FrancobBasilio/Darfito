@@ -1,4 +1,4 @@
-package com.tuusuario.darfito
+package com.tuusuario.darfito.model
 
 data class Usuario (
     var codigo : Int,

@@ -9,7 +9,6 @@
     android:padding="20dp"
     tools:context=".GameModeActivity">
 
-    <!-- Header con botón de volver -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +41,6 @@
 
     </LinearLayout>
 
-    <!-- Descripción -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +50,6 @@
         android:gravity="center"
         android:layout_marginBottom="40dp" />
 
-    <!-- Contenedor de modos de juego -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -60,7 +57,6 @@
         android:orientation="vertical"
         android:gravity="center">
 
-        <!-- Modo Fácil -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardEasy"
             android:layout_width="match_parent"
@@ -79,7 +75,6 @@
                 android:padding="20dp"
                 android:gravity="center_vertical">
 
-                <!-- Icono y emoji -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -97,7 +92,6 @@
 
                 </LinearLayout>
 
-                <!-- Información del modo -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -131,7 +125,6 @@
 
                 </LinearLayout>
 
-                <!-- Flecha -->
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -142,7 +135,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Modo Intermedio -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardMedium"
             android:layout_width="match_parent"
@@ -161,7 +153,6 @@
                 android:padding="20dp"
                 android:gravity="center_vertical">
 
-                <!-- Icono y emoji -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -179,7 +170,6 @@
 
                 </LinearLayout>
 
-                <!-- Información del modo -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -213,7 +203,7 @@
 
                 </LinearLayout>
 
-                <!-- Flecha -->
+
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -224,7 +214,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Modo Difícil -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardHard"
             android:layout_width="match_parent"
@@ -242,7 +231,6 @@
                 android:padding="20dp"
                 android:gravity="center_vertical">
 
-                <!-- Icono y emoji -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -260,7 +248,6 @@
 
                 </LinearLayout>
 
-                <!-- Información del modo -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -294,7 +281,6 @@
 
                 </LinearLayout>
 
-                <!-- Flecha -->
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -307,7 +293,6 @@
 
     </LinearLayout>
 
-    <!-- Información adicional -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

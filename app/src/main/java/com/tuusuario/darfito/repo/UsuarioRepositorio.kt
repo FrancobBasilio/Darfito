@@ -1,6 +1,6 @@
 package com.tuusuario.darfito.repo
 
-import com.tuusuario.darfito.Usuario
+import com.tuusuario.darfito.model.Usuario
 
 object UsuariosRepository {
     private val listaUsuarios = mutableListOf(

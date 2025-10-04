@@ -9,7 +9,6 @@
     android:padding="16dp"
     tools:context=".TriviaGameActivity">
 
-    <!-- Header del juego -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +16,6 @@
         android:gravity="center_vertical"
         android:layout_marginBottom="20dp">
 
-        <!-- Botón de pausa/salir -->
         <ImageButton
             android:id="@+id/btnPause"
             android:layout_width="40dp"
@@ -27,7 +25,6 @@
             android:contentDescription="Pausar"
             app:tint="@android:color/white" />
 
-        <!-- Nivel de dificultad -->
         <TextView
             android:id="@+id/tvDifficulty"
             android:layout_width="0dp"
@@ -39,7 +36,6 @@
             android:textColor="@android:color/white"
             android:gravity="center" />
 
-        <!-- Puntuación -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,7 +62,6 @@
 
     </LinearLayout>
 
-    <!-- Progreso de preguntas -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -115,7 +110,6 @@
 
     </LinearLayout>
 
-    <!-- Temporizador circular -->
     <androidx.cardview.widget.CardView
         android:layout_width="80dp"
         android:layout_height="80dp"
@@ -137,7 +131,6 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Pregunta -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -161,7 +154,6 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Opciones de respuesta -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -169,7 +161,6 @@
         android:orientation="vertical"
         android:gravity="center_vertical">
 
-        <!-- Opción A -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardOptionA"
             android:layout_width="match_parent"
@@ -213,7 +204,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Opción B -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardOptionB"
             android:layout_width="match_parent"
@@ -257,7 +247,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Opción C -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardOptionC"
             android:layout_width="match_parent"
@@ -301,7 +290,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Opción D -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardOptionD"
             android:layout_width="match_parent"

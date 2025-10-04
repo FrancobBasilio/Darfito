@@ -1,6 +1,5 @@
 package com.tuusuario.darfito
 
-import com.tuusuario.darfito.R
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -14,6 +13,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.tuusuario.darfito.model.Usuario
 import com.tuusuario.darfito.repo.UsuariosRepository
 import java.util.regex.Pattern
 
@@ -71,7 +71,6 @@ class RegistroActivity : AppCompatActivity() {
             validarCampos()
         }
 
-        // Limpiar errores al escribir
         tietNombre.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) tilNombre.error = null
         }
@@ -93,7 +92,7 @@ class RegistroActivity : AppCompatActivity() {
         val confirmPassword = tietConfirmPassword.text.toString().trim()
         var error = false
 
-        // Validar nombre
+
         if (nombre.isEmpty()) {
             tilNombre.error = "Ingrese su nombre completo"
             error = true
@@ -104,7 +103,7 @@ class RegistroActivity : AppCompatActivity() {
             tilNombre.error = null
         }
 
-        // Validar correo
+
         if (correo.isEmpty()) {
             tilCorreo.error = "Ingrese un correo electrónico"
             error = true
@@ -115,7 +114,7 @@ class RegistroActivity : AppCompatActivity() {
             tilCorreo.error = null
         }
 
-        // Validar contraseña
+
         if (password.isEmpty()) {
             tilPassword.error = "Ingrese una contraseña"
             error = true
@@ -126,7 +125,7 @@ class RegistroActivity : AppCompatActivity() {
             tilPassword.error = null
         }
 
-        // Validar confirmación de contraseña
+
         if (confirmPassword.isEmpty()) {
             tilConfirmPassword.error = "Confirme su contraseña"
             error = true
@@ -137,13 +136,12 @@ class RegistroActivity : AppCompatActivity() {
             tilConfirmPassword.error = null
         }
 
-        // Validar selección de género
         if (chipGroupSexo.checkedChipId == -1) {
             Toast.makeText(this, "Seleccione un género", Toast.LENGTH_SHORT).show()
             error = true
         }
 
-        // Validar términos y condiciones
+
         if (!cbTerminos.isChecked) {
             Toast.makeText(this, "Debe aceptar los términos y condiciones", Toast.LENGTH_SHORT).show()
             error = true
@@ -180,13 +178,11 @@ class RegistroActivity : AppCompatActivity() {
 
     private fun registrarUsuario(nombre: String, correo: String, password: String) {
         val genero = obtenerGeneroSeleccionado()
-
-        // Separar nombre y apellidos (asumiendo que el primer espacio divide nombre y apellidos)
         val partesNombre = nombre.split(" ", limit = 2)
         val nombres = partesNombre.getOrNull(0) ?: nombre
         val apellidos = partesNombre.getOrNull(1) ?: ""
 
-        // Crear nuevo usuario
+
         val nuevoId = UsuariosRepository.obtenerSiguienteId()
         val nuevoUsuario = Usuario(
             codigo = nuevoId,
@@ -197,7 +193,7 @@ class RegistroActivity : AppCompatActivity() {
             genero = genero
         )
 
-        // Agregar usuario a la lista compartida
+
         UsuariosRepository.agregarUsuario(nuevoUsuario)
 
         Toast.makeText(
@@ -206,8 +202,8 @@ class RegistroActivity : AppCompatActivity() {
             Toast.LENGTH_LONG
         ).show()
 
-        // Redirigir a AccesoActivity
-        val intent = Intent(this, AccesoActivity::class.java)
+
+        val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         finish()

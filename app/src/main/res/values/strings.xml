@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Darfito</string>
+
+
+    <!-- Navigation-->
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
+    <string name="desc_perfil">Perfil</string>
+
 </resources>

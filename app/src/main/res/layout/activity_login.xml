@@ -8,9 +8,8 @@
     android:layout_height="match_parent"
     android:background="#F8F9FA"
     android:fitsSystemWindows="true"
-    tools:context=".AccesoActivity">
+    tools:context=".LoginActivity">
 
-    <!-- Imagen de encabezado -->
     <ImageView
         android:id="@+id/ivLogoInicio"
         android:layout_width="150dp"
@@ -22,8 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-
-    <!-- ScrollView para contenido -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -38,7 +35,6 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- Card Container -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,7 +49,6 @@
                     android:orientation="vertical"
                     android:padding="24dp">
 
-                    <!-- Título -->
                     <TextView
                         android:id="@+id/tvTitulo"
                         android:layout_width="match_parent"
@@ -74,7 +69,7 @@
                         android:gravity="center"
                         android:layout_marginBottom="32dp" />
 
-                    <!-- Correo -->
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilCorreo"
                         android:layout_width="match_parent"
@@ -98,7 +93,7 @@
                             android:textSize="16sp"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Contraseña -->
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilClave"
                         android:layout_width="match_parent"
@@ -122,7 +117,6 @@
                             android:textSize="16sp"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Switch de términos -->
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchTerminos"
                         android:layout_width="match_parent"
@@ -135,7 +129,6 @@
                         app:thumbTint="#5DADE2"
                         app:trackTint="#BDC3C7"/>
 
-                    <!-- Botón Iniciar Sesión -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnInicio"
                         android:layout_width="match_parent"
@@ -148,7 +141,6 @@
                         app:backgroundTint="#5DADE2"
                         android:elevation="0dp"/>
 
-                    <!-- ¿Olvidaste la contraseña? -->
                     <TextView
                         android:id="@+id/tvOlvidar"
                         android:layout_width="match_parent"
@@ -164,7 +156,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Texto de registro -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

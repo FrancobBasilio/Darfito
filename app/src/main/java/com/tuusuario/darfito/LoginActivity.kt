@@ -1,6 +1,5 @@
 package com.tuusuario.darfito
 
-import com.tuusuario.darfito.R
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -16,7 +15,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.tuusuario.darfito.repo.UsuariosRepository
 
-class AccesoActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     private var tvRegistro: TextView? = null
     private lateinit var tietCorreo: TextInputEditText
@@ -28,7 +27,7 @@ class AccesoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_acceso)
+        setContentView(R.layout.activity_login)
 
         inicializarVistas()
         configurarListeners()
@@ -58,7 +57,6 @@ class AccesoActivity : AppCompatActivity() {
             cambioActivity(RegistroActivity::class.java)
         }
 
-        // Limpiar errores al escribir
         tietCorreo.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) tilCorreo.error = null
         }
@@ -94,21 +92,20 @@ class AccesoActivity : AppCompatActivity() {
     }
 
     private fun iniciarSesion(correo: String, clave: String) {
-        Toast.makeText(this, "Validación correcta. Procesando login...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Validando datos...", Toast.LENGTH_SHORT).show()
 
-        // Buscar usuario en el repositorio compartido
         val usuarioEncontrado = UsuariosRepository.buscarUsuario(correo, clave)
 
         if (usuarioEncontrado != null) {
-            Toast.makeText(
-                this,
-                "Bienvenido ${usuarioEncontrado.nombres}",
-                Toast.LENGTH_LONG
-            ).show()
+                Toast.makeText(
+                    this,
+                    "Bienvenido ${usuarioEncontrado.nombres}",
+                    Toast.LENGTH_LONG
+                ).show()
+                val intent = Intent(this, HomeActivity::class.java).apply {
+                    putExtra("usuario_id", usuarioEncontrado.codigo)
+                    putExtra("usuario_nombre", usuarioEncontrado.nombres)
 
-            val intent = Intent(this, HomeActivity::class.java).apply {
-                putExtra("usuario_id", usuarioEncontrado.codigo)
-                putExtra("usuario_nombre", usuarioEncontrado.nombres)
             }
             startActivity(intent)
             finish()

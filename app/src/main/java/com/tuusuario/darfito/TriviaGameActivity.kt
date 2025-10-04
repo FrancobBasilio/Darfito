@@ -252,7 +252,7 @@ class TriviaGameActivity : AppCompatActivity() {
     }
 
     private fun loadQuestionsForDifficulty(difficulty: GameDifficulty): List<Question> {
-        // En una app real, estas preguntas vendrían de tu API o base de datos
+        // app real, conectar con base de datos para preguntas
         return when (difficulty) {
             GameDifficulty.EASY -> getEasyQuestions()
             GameDifficulty.MEDIUM -> getMediumQuestions()

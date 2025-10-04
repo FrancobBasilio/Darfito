@@ -15,7 +15,7 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Card Container -->
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
-                <!-- Título -->
+
                 <TextView
                     android:id="@+id/tvTitulo"
                     android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                     android:gravity="center"
                     android:layout_marginBottom="32dp" />
 
-                <!-- Nombre -->
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilNombre"
                     android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                         android:textSize="16sp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Correo -->
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilCorreo"
                     android:layout_width="match_parent"
@@ -95,7 +95,6 @@
                         android:textSize="16sp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Contraseña -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilPassword"
                     android:layout_width="match_parent"
@@ -118,7 +117,6 @@
                         android:textSize="16sp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Confirmar Contraseña -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilConfirmPassword"
                     android:layout_width="match_parent"
@@ -141,7 +139,7 @@
                         android:textSize="16sp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Sexo Label -->
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -151,7 +149,6 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp"/>
 
-                <!-- Sexo con Chips -->
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroupSexo"
                     android:layout_width="match_parent"
@@ -194,7 +191,6 @@
                         style="@style/Widget.MaterialComponents.Chip.Choice"/>
                 </com.google.android.material.chip.ChipGroup>
 
-                <!-- Check Términos -->
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/cbTerminos"
                     android:layout_width="match_parent"
@@ -205,7 +201,6 @@
                     app:buttonTint="#5DADE2"
                     android:layout_marginBottom="24dp"/>
 
-                <!-- Botón Guardar -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnGuardar"
                     android:layout_width="match_parent"
@@ -221,7 +216,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Texto inferior -->
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
