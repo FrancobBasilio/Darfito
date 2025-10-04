@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
+    android:background="@drawable/bg_morado_animado"
     tools:context=".HomeActivity">
 
     <LinearLayout
@@ -33,7 +33,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="17sp"
+                    android:textSize="20sp"
                     android:text="Bienvenido a Trivia"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"
@@ -257,8 +257,10 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         app:menu="@menu/side_tabs"
-        app:itemTextColor="@color/teal_200"
-        android:fitsSystemWindows="true"/>
+        android:background="@drawable/gradient_background"
+        app:headerLayout="@layout/header"
+        app:itemTextColor="#160147"
+        android:fitsSystemWindows="true" />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

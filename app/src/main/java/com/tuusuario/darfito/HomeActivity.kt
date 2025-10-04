@@ -2,6 +2,7 @@ package com.tuusuario.darfito
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageButton
