@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.tuusuario.darfito.GameModeActivity
+import com.tuusuario.darfito.PlayerProfileDialogFragment
 import com.tuusuario.darfito.R
 import com.tuusuario.darfito.adapter.RankingAdapter
 import com.tuusuario.darfito.model.Player
@@ -63,16 +64,16 @@ class HomeFragment : Fragment() {
 
     private fun loadRankingData() {
         val players = listOf(
-            Player("4", "Luis Martín", 2180, "Nivel Experto"),
-            Player("5", "Sofia López", 1950, "Nivel Avanzado"),
-            Player("6", "Diego Sánchez", 1820, "Nivel Avanzado"),
-            Player("7", "Carmen Ruiz", 1675, "Nivel Intermedio"),
-            Player("8", "Pedro Jiménez", 1540, "Nivel Intermedio"),
-            Player("9", "Laura García", 1420, "Nivel Intermedio"),
-            Player("10", "Miguel Torres", 1350, "Nivel Básico"),
-            Player("11", "Elena Morales", 1280, "Nivel Básico"),
-            Player("12", "Javier Herrera", 1150, "Nivel Básico"),
-            Player("13", "Isabel Vargas", 1080, "Nivel Básico")
+            Player("CP04", "Luis Martín", 2180, "Nivel Experto", R.drawable.ic_person),
+            Player("CP05", "Sofia López", 1950, "Nivel Avanzado", R.drawable.ic_person),
+            Player("CP06", "Diego Sánchez", 1820, "Nivel Avanzado", R.drawable.ic_person),
+            Player("CP07", "Carmen Ruiz", 1675, "Nivel Intermedio", R.drawable.ic_person),
+            Player("CP08", "Pedro Jiménez", 1540, "Nivel Intermedio", R.drawable.ic_person),
+            Player("CP09", "Laura García", 1420, "Nivel Intermedio", R.drawable.ic_person),
+            Player("CP010", "Miguel Torres", 1350, "Nivel Básico", R.drawable.ic_person),
+            Player("CP011", "Elena Morales", 1280, "Nivel Básico", R.drawable.ic_person),
+            Player("CP012", "Javier Herrera", 1150, "Nivel Básico", R.drawable.ic_person),
+            Player("CP013", "Isabel Vargas", 1080, "Nivel Básico", R.drawable.ic_person)
         )
 
         rankingAdapter.updatePlayers(players)
@@ -84,6 +85,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun showPlayerProfile(player: Player) {
-        Toast.makeText(requireContext(), "Ver perfil de ${player.name}", Toast.LENGTH_SHORT).show()
+        val dialog = PlayerProfileDialogFragment.newInstance(player)
+        dialog.show(parentFragmentManager, "PlayerProfileDialog")
     }
 }

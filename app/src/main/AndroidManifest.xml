@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_icono_darfito"
         android:supportsRtl="true"
         android:theme="@style/Theme.Darfito">
-
+        <activity
+            android:name=".adapter.AvatarAdapter"
+            android:exported="false" />
         <activity
             android:name=".GameResultActivity"
             android:exported="false" />

@@ -29,7 +29,7 @@ class RankingAdapter(
     }
 
     override fun onBindViewHolder(holder: RankingViewHolder, position: Int) {
-        holder.bind(players[position], position + 4) // +4 porque empezamos desde el puesto 4
+        holder.bind(players[position], position + 4)
     }
 
     override fun getItemCount() = players.size

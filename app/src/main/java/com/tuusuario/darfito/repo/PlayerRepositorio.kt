@@ -2,13 +2,14 @@ package com.tuusuario.darfito.repo
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.tuusuario.darfito.R
 import com.tuusuario.darfito.model.Player
 import com.tuusuario.darfito.model.Usuario
 
 object PlayerRepositorio{
     private val listaPlayer = mutableListOf(
-        Player("D123453", "Monico", 123454, "Nivel Intermedio", "https://example.com/avatar1.jpg"),
-        Player("D123553", "Leonin", 133454, "Nivel Experto", "https://example.com/avatar1.jpg")
+        Player("D123453", "Monico", 123454, "Nivel Intermedio", R.drawable.popeye),
+        Player("D123553", "Leonin", 133454, "Nivel Experto", R.drawable.goku)
     )
 
     fun obtenerPlayer(): List<Player> = listaPlayer

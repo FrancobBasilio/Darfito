@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Colores para tu app -->
+    <!-- Colores para  app -->
     <color name="play_button_color">#FF4CAF50</color>
     <color name="gold">#FFD700</color>
     <color name="silver">#C0C0C0</color>
@@ -27,6 +27,16 @@
     <color name="incorrect_answer_color">#F44336</color>
     <color name="timer_warning_color">#FF5722</color>
 
+    <!-- Colores principales -->
+    <color name="primary">#6200EE</color>
+    <color name="primary_dark">#3700B3</color>
+    <color name="accent">#03DAC5</color>
+
+    <!-- Colores de gris -->
+    <color name="gray_100">#F5F5F5</color>
+    <color name="gray_200">#EEEEEE</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_600">#757575</color>
 
 
 </resources>

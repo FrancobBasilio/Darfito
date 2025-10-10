@@ -5,5 +5,5 @@ data class Player(
     val name: String,
     val score: Int,
     val level: String,
-    val avatarUrl: String? = null
+    val avatarResId: Int
 )
