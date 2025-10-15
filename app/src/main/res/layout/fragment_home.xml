@@ -1,211 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:text="🏆 RANKING GENERAL"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🏆 TOP 3 MEJORES"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:gravity="center"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRanking"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/ranking_background"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        tools:listitem="@layout/item_ranking" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="24dp"
-            android:padding="8dp">
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPlay"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="🎮 ¡JUGAR AHORA!"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        app:cornerRadius="28dp"
+        app:backgroundTint="@color/play_button_color"
+        app:icon="@drawable/ic_play"
+        app:iconGravity="textStart"
+        app:iconSize="24dp" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="4dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@drawable/podium_second"
-                    android:padding="12dp">
-
-                    <TextView
-                        android:text="🥈"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="24sp"
-                        android:layout_marginBottom="4dp" />
-
-                    <TextView
-                        android:id="@+id/tvSecondName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Carlos R."
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/white"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:id="@+id/tvSecondScore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2,650"
-                        android:textSize="14sp"
-                        android:textColor="#FFD700"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="4dp"
-                android:layout_marginTop="-20dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@drawable/podium_first"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:text="👑"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="32sp"
-                        android:layout_marginBottom="4dp" />
-
-                    <TextView
-                        android:id="@+id/tvFirstName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="María G."
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/white"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:id="@+id/tvFirstScore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2,847"
-                        android:textSize="16sp"
-                        android:textColor="#FFD700"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="4dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@drawable/podium_third"
-                    android:padding="12dp">
-
-                    <TextView
-                        android:text="🥉"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="24sp"
-                        android:layout_marginBottom="4dp" />
-
-                    <TextView
-                        android:id="@+id/tvThirdName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ana M."
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/white"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:id="@+id/tvThirdScore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2,430"
-                        android:textSize="14sp"
-                        android:textColor="#FFD700"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="📊 RANKING GENERAL"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:gravity="center"
-            android:layout_marginBottom="12dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvRanking"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/ranking_background"
-            android:padding="8dp"
-            android:layout_margin="12dp"
-            android:minHeight="300dp"
-            tools:listitem="@layout/item_ranking" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnPlay"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="🎮 ¡JUGAR AHORA!"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_margin="16dp"
-            app:cornerRadius="28dp"
-            app:backgroundTint="@color/play_button_color"
-            app:icon="@drawable/ic_play"
-            app:iconGravity="textStart"
-            app:iconSize="24dp" />
-
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

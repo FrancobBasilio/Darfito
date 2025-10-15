@@ -1,6 +1,5 @@
-package com.tuusuario.darfito
+package com.tuusuario.darfito.ui
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +9,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
+import com.tuusuario.darfito.R
+import com.tuusuario.darfito.data.dao.AmigoDAO
+import com.tuusuario.darfito.data.dao.SolicitudDAO
+import com.tuusuario.darfito.data.dao.UsuarioDAO
 import com.tuusuario.darfito.model.Player
 import java.text.NumberFormat
-import java.util.*
-
+import java.util.Locale
 
 class PlayerProfileDialogFragment : DialogFragment() {
 
@@ -26,23 +28,39 @@ class PlayerProfileDialogFragment : DialogFragment() {
     private lateinit var btnClose: MaterialButton
 
     private var player: Player? = null
-    private var isFollowing = false
+    private var estadoAmistad: EstadoAmistad = EstadoAmistad.DESCONOCIDO
+
+    // DAOs
+    private lateinit var usuarioDAO: UsuarioDAO
+    private lateinit var solicitudDAO: SolicitudDAO
+    private lateinit var amigoDAO: AmigoDAO
+
+    private var usuarioActualId: Int = -1
+
+    enum class EstadoAmistad {
+        DESCONOCIDO,
+        YA_AMIGOS,
+        SOLICITUD_ENVIADA,
+        PUEDE_ENVIAR
+    }
 
     companion object {
         private const val ARG_PLAYER_ID = "player_id"
-        private const val ARG_PLAYER_NAME = "player_name"
+        private const val ARG_USUARIO_ID = "usuario_id"
         private const val ARG_PLAYER_SCORE = "player_score"
         private const val ARG_PLAYER_LEVEL = "player_level"
         private const val ARG_PLAYER_AVATAR = "player_avatar"
+        private const val ARG_USUARIO_ACTUAL_ID = "usuario_actual_id"
 
-        fun newInstance(player: Player): PlayerProfileDialogFragment {
+        fun newInstance(player: Player, usuarioActualId: Int): PlayerProfileDialogFragment {
             val fragment = PlayerProfileDialogFragment()
             val args = Bundle().apply {
                 putString(ARG_PLAYER_ID, player.id)
-                putString(ARG_PLAYER_NAME, player.name)
+                putInt(ARG_USUARIO_ID, player.usuarioId)
                 putInt(ARG_PLAYER_SCORE, player.score)
                 putString(ARG_PLAYER_LEVEL, player.level)
                 putInt(ARG_PLAYER_AVATAR, player.avatarResId)
+                putInt(ARG_USUARIO_ACTUAL_ID, usuarioActualId)
             }
             fragment.arguments = args
             return fragment
@@ -65,8 +83,14 @@ class PlayerProfileDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Inicializar DAOs
+        usuarioDAO = UsuarioDAO(requireContext())
+        solicitudDAO = SolicitudDAO(requireContext())
+        amigoDAO = AmigoDAO(requireContext())
+
         initViews(view)
         loadPlayerData()
+        verificarEstadoAmistad()
         setupClickListeners()
     }
 
@@ -82,9 +106,11 @@ class PlayerProfileDialogFragment : DialogFragment() {
 
     private fun loadPlayerData() {
         arguments?.let { args ->
+            usuarioActualId = args.getInt(ARG_USUARIO_ACTUAL_ID, -1)
+
             player = Player(
                 id = args.getString(ARG_PLAYER_ID) ?: "",
-                name = args.getString(ARG_PLAYER_NAME) ?: "",
+                usuarioId = args.getInt(ARG_USUARIO_ID),
                 score = args.getInt(ARG_PLAYER_SCORE),
                 level = args.getString(ARG_PLAYER_LEVEL) ?: "",
                 avatarResId = args.getInt(ARG_PLAYER_AVATAR)
@@ -95,7 +121,9 @@ class PlayerProfileDialogFragment : DialogFragment() {
     }
 
     private fun displayPlayerInfo(player: Player) {
-        tvProfileName.text = player.name
+        // Obtener nombre del usuario desde la BD
+        val usuario = usuarioDAO.obtenerPorId(player.usuarioId)
+        tvProfileName.text = usuario?.nombres ?: "Jugador"
         tvProfileId.text = "ID: ${player.id}"
 
         val formattedScore = NumberFormat.getNumberInstance(Locale.getDefault())
@@ -103,12 +131,38 @@ class PlayerProfileDialogFragment : DialogFragment() {
         tvProfileScore.text = formattedScore
 
         tvProfileLevel.text = player.level
-        ivProfileAvatar.setImageResource(R.drawable.ic_person)
+        ivProfileAvatar.setImageResource(player.avatarResId)
+    }
+
+    private fun verificarEstadoAmistad() {
+        player?.let { p ->
+            // No puede seguirse a sí mismo
+            if (p.usuarioId == usuarioActualId) {
+                btnFollow.visibility = View.GONE
+                return
+            }
+
+            // Verificar si ya son amigos
+            if (amigoDAO.sonAmigos(usuarioActualId, p.usuarioId)) {
+                estadoAmistad = EstadoAmistad.YA_AMIGOS
+                btnFollow.text = "YA SON AMIGOS"
+                btnFollow.setIconResource(R.drawable.ic_check)
+                btnFollow.isEnabled = false
+                return
+            }
+
+            // Verificar si ya existe solicitud pendiente
+            // (Esto requeriría agregar un método al DAO)
+            estadoAmistad = EstadoAmistad.PUEDE_ENVIAR
+            btnFollow.text = "SEGUIR"
+            btnFollow.setIconResource(R.drawable.ic_add)
+            btnFollow.isEnabled = true
+        }
     }
 
     private fun setupClickListeners() {
         btnFollow.setOnClickListener {
-            toggleFollow()
+            enviarSolicitud()
         }
 
         btnClose.setOnClickListener {
@@ -116,25 +170,27 @@ class PlayerProfileDialogFragment : DialogFragment() {
         }
     }
 
-    private fun toggleFollow() {
-        isFollowing = !isFollowing
+    private fun enviarSolicitud() {
+        player?.let { p ->
+            val resultado = solicitudDAO.insertar(usuarioActualId, p.usuarioId)
 
-        if (isFollowing) {
-            btnFollow.text = "SIGUIENDO"
-            btnFollow.setIconResource(R.drawable.ic_check)
-            Toast.makeText(
-                requireContext(),
-                "Ahora sigues a ${player?.name}",
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            btnFollow.text = "SEGUIR"
-            btnFollow.setIconResource(R.drawable.ic_add)
-            Toast.makeText(
-                requireContext(),
-                "Dejaste de seguir a ${player?.name}",
-                Toast.LENGTH_SHORT
-            ).show()
+            if (resultado != -1L) {
+                Toast.makeText(
+                    requireContext(),
+                    "Solicitud enviada correctamente",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                btnFollow.text = "SOLICITUD ENVIADA"
+                btnFollow.isEnabled = false
+                estadoAmistad = EstadoAmistad.SOLICITUD_ENVIADA
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "No se pudo enviar la solicitud. Puede que ya exista una pendiente.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 

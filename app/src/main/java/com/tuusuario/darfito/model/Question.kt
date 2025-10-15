@@ -1,9 +1,10 @@
 package com.tuusuario.darfito.model
 
 data class Question(
-    val text: String,
-    val options: List<String>,
-    val correctAnswer: Int,
-    val category: String? = null,
-    val difficulty: String? = null
+    var id : Int = 0,
+    var text: String,
+    var options: List<String>,
+    var correctAnswer: Int,
+    var category: String? = null,
+    var difficulty: GameDifficulty
 )

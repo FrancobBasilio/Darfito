@@ -1,11 +1,10 @@
-package com.tuusuario.darfito.fragments
+package com.tuusuario.darfito.ui
 
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +12,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.tuusuario.darfito.HomeActivity
 import com.tuusuario.darfito.R
+import com.tuusuario.darfito.data.dao.PlayerDAO
+import com.tuusuario.darfito.data.dao.UsuarioDAO
 import com.tuusuario.darfito.model.Player
-import com.tuusuario.darfito.repo.PlayerRepositorio
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 
 class PerfilFragment : Fragment() {
 
@@ -31,6 +33,11 @@ class PerfilFragment : Fragment() {
 
     private var currentPlayer: Player? = null
     private var selectedAvatarResId: Int = R.drawable.ic_person
+    private var usuarioId: Int = -1
+
+    // DAOs
+    private lateinit var playerDAO: PlayerDAO
+    private lateinit var usuarioDAO: UsuarioDAO
 
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -53,6 +60,13 @@ class PerfilFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Inicializar DAOs
+        playerDAO = PlayerDAO(requireContext())
+        usuarioDAO = UsuarioDAO(requireContext())
+
+        // Obtener usuario ID
+        usuarioId = (activity as? HomeActivity)?.obtenerUsuarioId() ?: -1
+
         initViews(view)
         loadCurrentPlayer()
         setupClickListeners()
@@ -68,24 +82,55 @@ class PerfilFragment : Fragment() {
     }
 
     private fun loadCurrentPlayer() {
-        // Aquí deberías obtener el jugador actual logueado
-        // Por ahora usamos el primero de la lista como ejemplo
-        currentPlayer = PlayerRepositorio.obtenerPlayer().firstOrNull()
+        if (usuarioId == -1) {
+            Toast.makeText(
+                requireContext(),
+                "Error: Usuario no identificado",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        // Buscar player del usuario actual desde la BD
+        currentPlayer = playerDAO.buscarPorUsuarioId(usuarioId)
 
         currentPlayer?.let { player ->
             displayPlayerInfo(player)
         } ?: run {
+            // Si no existe player, crear uno por defecto
+            crearPlayerPorDefecto()
+        }
+    }
+
+    private fun crearPlayerPorDefecto() {
+        val nuevoPlayer = Player(
+            id = "0",
+            usuarioId = usuarioId,
+            score = 0,
+            level = "Nivel Básico",
+            avatarResId = R.drawable.ic_person
+        )
+
+        val resultado = playerDAO.insertar(nuevoPlayer)
+
+        if (resultado != -1L) {
+            // Recargar el player recién creado
+            currentPlayer = playerDAO.buscarPorUsuarioId(usuarioId)
+            currentPlayer?.let { displayPlayerInfo(it) }
+        } else {
             Toast.makeText(
                 requireContext(),
-                "No se encontró información del jugador",
+                "Error al crear perfil de jugador",
                 Toast.LENGTH_SHORT
             ).show()
         }
     }
 
     private fun displayPlayerInfo(player: Player) {
-        tvProfileName.text = player.name
-        tvProfileId.text = player.id
+        // Obtener nombre del usuario
+        val usuario = usuarioDAO.obtenerPorId(player.usuarioId)
+        tvProfileName.text = usuario?.nombres ?: "Jugador"
+        tvProfileId.text = "ID: ${player.id}"
 
         // Formatear el score con separadores de miles
         val formattedScore = NumberFormat.getNumberInstance(Locale.getDefault())
@@ -125,9 +170,6 @@ class PerfilFragment : Fragment() {
                 "Foto actualizada exitosamente",
                 Toast.LENGTH_SHORT
             ).show()
-
-            // Aquí podrías guardar la URI en SharedPreferences o base de datos
-            // saveImageUri(uri)
         } catch (e: Exception) {
             Toast.makeText(
                 requireContext(),
@@ -141,13 +183,16 @@ class PerfilFragment : Fragment() {
         selectedAvatarResId = avatarResId
         ivProfileAvatar.setImageResource(avatarResId)
 
-        // Actualizar en el repositorio
         currentPlayer?.let { player ->
             val updatedPlayer = player.copy(avatarResId = avatarResId)
-            val success = PlayerRepositorio.actualizarPlayer(updatedPlayer)
+            val rowsAffected = playerDAO.actualizar(updatedPlayer)
 
-            if (success) {
+            if (rowsAffected > 0) {
                 currentPlayer = updatedPlayer
+
+                // ✅ ACTUALIZAR EL HEADER DEL MENU
+                (activity as? HomeActivity)?.actualizarHeader()
+
                 Toast.makeText(
                     requireContext(),
                     "Avatar actualizado exitosamente",
@@ -162,7 +207,6 @@ class PerfilFragment : Fragment() {
             }
         }
     }
-
     override fun onResume() {
         super.onResume()
         // Recargar datos al volver al fragment

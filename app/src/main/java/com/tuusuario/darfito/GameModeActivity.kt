@@ -2,10 +2,12 @@ package com.tuusuario.darfito
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import com.google.androidgamesdk.GameActivity
+import com.tuusuario.darfito.R
 import com.tuusuario.darfito.model.GameDifficulty
 
 class GameModeActivity : AppCompatActivity() {
@@ -15,9 +17,23 @@ class GameModeActivity : AppCompatActivity() {
     private lateinit var cardMedium: CardView
     private lateinit var cardHard: CardView
 
+    private var usuarioId: Int = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_mode)
+
+
+
+        // Obtener usuario ID
+        usuarioId = intent.getIntExtra("usuario_id", -1)
+
+
+        // DEBUG
+        Log.d("GAMEMODE_DEBUG", "usuario_id recibido: $usuarioId")
+        // DEBUG
+        Toast.makeText(this, "GameMode - usuarioId: $usuarioId", Toast.LENGTH_LONG).show()
+
 
         initViews()
         setupClickListeners()
@@ -49,13 +65,22 @@ class GameModeActivity : AppCompatActivity() {
     }
 
     private fun startGame(difficulty: GameDifficulty) {
+        // Verificar que tenemos usuario_id válido
+        if (usuarioId == -1) {
+            Toast.makeText(this, "Error: Usuario no identificado", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
         val intent = Intent(this, TriviaGameActivity::class.java).apply {
             putExtra("DIFFICULTY", difficulty.name)
             putExtra("TIME_LIMIT", difficulty.timeLimit)
             putExtra("POINTS_PER_QUESTION", difficulty.pointsPerQuestion)
             putExtra("TOTAL_QUESTIONS", difficulty.totalQuestions)
+            putExtra("USUARIO_ID", usuarioId)
         }
         startActivity(intent)
-
     }
+
+
 }

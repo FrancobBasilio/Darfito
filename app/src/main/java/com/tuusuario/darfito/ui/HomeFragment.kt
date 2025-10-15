@@ -1,5 +1,4 @@
-package com.tuusuario.darfito.fragments
-
+package com.tuusuario.darfito.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,9 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.tuusuario.darfito.GameModeActivity
-import com.tuusuario.darfito.PlayerProfileDialogFragment
+import com.tuusuario.darfito.HomeActivity
 import com.tuusuario.darfito.R
 import com.tuusuario.darfito.adapter.RankingAdapter
+import com.tuusuario.darfito.data.dao.PlayerDAO
+import com.tuusuario.darfito.data.dao.UsuarioDAO
 import com.tuusuario.darfito.model.Player
 
 class HomeFragment : Fragment() {
@@ -22,6 +23,10 @@ class HomeFragment : Fragment() {
     private lateinit var rvRanking: RecyclerView
     private lateinit var btnPlay: MaterialButton
     private lateinit var rankingAdapter: RankingAdapter
+
+    // DAOs
+    private lateinit var playerDAO: PlayerDAO
+    private lateinit var usuarioDAO: UsuarioDAO
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +38,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Inicializar DAOs
+        playerDAO = PlayerDAO(requireContext())
+        usuarioDAO = UsuarioDAO(requireContext())
 
         initViews(view)
         setupRanking()
@@ -63,29 +72,35 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadRankingData() {
-        val players = listOf(
-            Player("CP04", "Luis Martín", 2180, "Nivel Experto", R.drawable.ic_person),
-            Player("CP05", "Sofia López", 1950, "Nivel Avanzado", R.drawable.ic_person),
-            Player("CP06", "Diego Sánchez", 1820, "Nivel Avanzado", R.drawable.ic_person),
-            Player("CP07", "Carmen Ruiz", 1675, "Nivel Intermedio", R.drawable.ic_person),
-            Player("CP08", "Pedro Jiménez", 1540, "Nivel Intermedio", R.drawable.ic_person),
-            Player("CP09", "Laura García", 1420, "Nivel Intermedio", R.drawable.ic_person),
-            Player("CP010", "Miguel Torres", 1350, "Nivel Básico", R.drawable.ic_person),
-            Player("CP011", "Elena Morales", 1280, "Nivel Básico", R.drawable.ic_person),
-            Player("CP012", "Javier Herrera", 1150, "Nivel Básico", R.drawable.ic_person),
-            Player("CP013", "Isabel Vargas", 1080, "Nivel Básico", R.drawable.ic_person)
-        )
+        // Obtener TODOS los players ordenados por score desde la BD
+        val allPlayers = playerDAO.obtenerTodos()
 
-        rankingAdapter.updatePlayers(players)
+        // Mostrar TODOS en el RecyclerView (desde el puesto #1)
+        rankingAdapter.updatePlayers(allPlayers)
     }
 
     private fun startGame() {
+        val usuarioId = (activity as? HomeActivity)?.obtenerUsuarioId() ?: -1
+
+        if (usuarioId == -1) {
+            Toast.makeText(requireContext(), "Error: Usuario no identificado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val intent = Intent(requireContext(), GameModeActivity::class.java)
+        intent.putExtra("usuario_id", usuarioId)
         startActivity(intent)
     }
 
     private fun showPlayerProfile(player: Player) {
-        val dialog = PlayerProfileDialogFragment.newInstance(player)
+        val usuarioId = (activity as? HomeActivity)?.obtenerUsuarioId() ?: -1
+        val dialog = PlayerProfileDialogFragment.newInstance(player, usuarioId)
         dialog.show(parentFragmentManager, "PlayerProfileDialog")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Recargar ranking cuando se vuelve al fragment
+        loadRankingData()
     }
 }

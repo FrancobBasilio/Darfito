@@ -1,11 +1,9 @@
-package com.tuusuario.darfito.fragments
+package com.tuusuario.darfito.ui
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +25,7 @@ class AvatarSelectionDialogFragment(
         val AVAILABLE_AVATARS = listOf(
             R.drawable.popeye,
             R.drawable.goku,
-            R.drawable.ic_person,
+            R.drawable.ic_person
         )
     }
 
@@ -83,5 +81,4 @@ class AvatarSelectionDialogFragment(
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
-
 }

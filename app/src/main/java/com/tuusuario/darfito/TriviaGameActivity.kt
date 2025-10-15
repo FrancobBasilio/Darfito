@@ -1,16 +1,20 @@
 package com.tuusuario.darfito
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import com.tuusuario.darfito.R
+import com.tuusuario.darfito.data.dao.QuestionDAO
 import com.tuusuario.darfito.model.GameDifficulty
 import com.tuusuario.darfito.model.Question
 
@@ -47,10 +51,20 @@ class TriviaGameActivity : AppCompatActivity() {
     private var isAnswerSelected = false
     private var remainingTimeInSeconds: Int = 0
     private val timeBonusForCorrectAnswer: Int = 5
+    private var usuarioId: Int = -1  // ✅ AGREGAR ESTO
+
+    // DAO
+    private lateinit var questionDAO: QuestionDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trivia_game)
+
+        // Inicializar DAO
+        questionDAO = QuestionDAO(this)
+
+        // Inicializar preguntas en BD (solo la primera vez)
+        questionDAO.inicializarPreguntas()
 
         initViews()
         getGameParameters()
@@ -83,14 +97,21 @@ class TriviaGameActivity : AppCompatActivity() {
         timeLimit = intent.getIntExtra("TIME_LIMIT", 30)
         pointsPerQuestion = intent.getIntExtra("POINTS_PER_QUESTION", 10)
         totalQuestions = intent.getIntExtra("TOTAL_QUESTIONS", 10)
+
+        usuarioId = intent.getIntExtra("USUARIO_ID", -1)
+
+        // DEBUG
+        Log.d("TRIVIA_DEBUG", "USUARIO_ID recibido: $usuarioId")
+        // DEBUG
+        Toast.makeText(this, "Trivia - usuarioId: $usuarioId", Toast.LENGTH_LONG).show()
     }
 
     private fun initializeGame() {
         tvDifficulty.text = difficulty.displayName.uppercase()
         tvScore.text = currentScore.toString()
-
         remainingTimeInSeconds = timeLimit
 
+        // Cargar preguntas desde la BD usando DAO
         questions = loadQuestionsForDifficulty(difficulty)
 
         showCurrentQuestion()
@@ -124,9 +145,7 @@ class TriviaGameActivity : AppCompatActivity() {
 
         tvQuestionProgress.text = "Pregunta ${currentQuestionIndex + 1} de $totalQuestions"
 
-
         resetOptionColors()
-
         startTimer()
     }
 
@@ -160,7 +179,6 @@ class TriviaGameActivity : AppCompatActivity() {
                 progressBar.progress = 0
                 if (!isAnswerSelected) {
                     showCorrectAnswer()
-
                     endGame()
                 }
             }
@@ -182,10 +200,7 @@ class TriviaGameActivity : AppCompatActivity() {
             correctAnswers++
             currentScore += pointsPerQuestion
             tvScore.text = currentScore.toString()
-
             remainingTimeInSeconds += timeBonusForCorrectAnswer
-        } else {
-
         }
 
         tvTimer.postDelayed({ moveToNextQuestion() }, 2000)
@@ -236,6 +251,7 @@ class TriviaGameActivity : AppCompatActivity() {
             putExtra("CORRECT_ANSWERS", correctAnswers)
             putExtra("TOTAL_QUESTIONS", totalQuestions)
             putExtra("DIFFICULTY", difficulty.name)
+            putExtra("USUARIO_ID", usuarioId)
         }
         startActivity(intent)
         finish()
@@ -258,86 +274,8 @@ class TriviaGameActivity : AppCompatActivity() {
     }
 
     private fun loadQuestionsForDifficulty(difficulty: GameDifficulty): List<Question> {
-        return when (difficulty) {
-            GameDifficulty.EASY -> getEasyQuestions()
-            GameDifficulty.MEDIUM -> getMediumQuestions()
-            GameDifficulty.HARD -> getHardQuestions()
-        }
-    }
-
-    private fun getEasyQuestions(): List<Question> {
-        return listOf(
-            Question("¿Cuál es la capital de Francia?",
-                listOf("París", "Londres", "Madrid", "Roma"), 0),
-            Question("¿Cuántos continentes hay?",
-                listOf("5", "6", "7", "8"), 2),
-            Question("¿Cuál es el planeta más grande del sistema solar?",
-                listOf("Tierra", "Marte", "Júpiter", "Saturno"), 2),
-            Question("¿En qué año llegó el hombre a la Luna?",
-                listOf("1967", "1968", "1969", "1970"), 2),
-            Question("¿Cuál es el océano más grande?",
-                listOf("Atlántico", "Pacífico", "Índico", "Ártico"), 1),
-            Question("¿Cuántos lados tiene un hexágono?",
-                listOf("5", "6", "7", "8"), 1),
-            Question("¿Cuál es el animal más rápido del mundo?",
-                listOf("León", "Guepardo", "Águila", "Halcón peregrino"), 3),
-            Question("¿En qué país se encuentra Machu Picchu?",
-                listOf("Brasil", "Chile", "Perú", "Ecuador"), 2),
-            Question("¿Cuál es el río más largo del mundo?",
-                listOf("Nilo", "Amazonas", "Yangtsé", "Misisipi"), 1),
-            Question("¿Cuántos huesos tiene el cuerpo humano adulto?",
-                listOf("206", "208", "210", "212"), 0)
-        )
-    }
-
-    private fun getMediumQuestions(): List<Question> {
-        return listOf(
-            Question("¿Quién escribió 'Cien años de soledad'?",
-                listOf("Mario Vargas Llosa", "Gabriel García Márquez", "Jorge Luis Borges", "Pablo Neruda"), 1),
-            Question("¿Cuál es la fórmula química del agua?",
-                listOf("H2O", "CO2", "NaCl", "CH4"), 0),
-            Question("¿En qué año cayó el Muro de Berlín?",
-                listOf("1987", "1988", "1989", "1990"), 2),
-            Question("¿Cuál es la montaña más alta del mundo?",
-                listOf("K2", "Everest", "Kangchenjunga", "Makalu"), 1),
-            Question("¿Quién pintó 'La Mona Lisa'?",
-                listOf("Van Gogh", "Picasso", "Leonardo da Vinci", "Michelangelo"), 2),
-            Question("¿Cuál es el elemento químico más abundante en el universo?",
-                listOf("Oxígeno", "Carbono", "Hidrógeno", "Helio"), 2),
-            Question("¿En qué ciudad se encuentra el Coliseo Romano?",
-                listOf("Atenas", "Roma", "Florencia", "Venecia"), 1),
-            Question("¿Cuál es la velocidad de la luz?",
-                listOf("300,000 km/s", "150,000 km/s", "450,000 km/s", "600,000 km/s"), 0),
-            Question("¿Quién desarrolló la teoría de la relatividad?",
-                listOf("Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"), 1),
-            Question("¿Cuál es el país más pequeño del mundo?",
-                listOf("Mónaco", "San Marino", "Vaticano", "Liechtenstein"), 2)
-        )
-    }
-
-    private fun getHardQuestions(): List<Question> {
-        return listOf(
-            Question("¿Cuál es la constante de Planck?",
-                listOf("6.626 × 10⁻³⁴ J⋅s", "9.109 × 10⁻³¹ kg", "1.602 × 10⁻¹⁹ C", "2.998 × 10⁸ m/s"), 0),
-            Question("¿Quién fue el primer emperador romano?",
-                listOf("Julio César", "Marco Antonio", "Augusto", "Nerón"), 2),
-            Question("¿En qué año se publicó 'El origen de las especies'?",
-                listOf("1859", "1865", "1871", "1882"), 0),
-            Question("¿Cuál es la capital de Burkina Faso?",
-                listOf("Uagadugú", "Bamako", "Niamey", "N'Djamena"), 0),
-            Question("¿Quién compuso 'Las cuatro estaciones'?",
-                listOf("Bach", "Mozart", "Vivaldi", "Beethoven"), 2),
-            Question("¿Cuál es el número atómico del oro?",
-                listOf("77", "78", "79", "80"), 2),
-            Question("¿En qué batalla fue derrotado Napoleón definitivamente?",
-                listOf("Austerlitz", "Waterloo", "Leipzig", "Borodino"), 1),
-            Question("¿Cuál es la distancia aproximada de la Tierra al Sol?",
-                listOf("150 millones km", "93 millones millas", "1 UA", "Todas son correctas"), 3),
-            Question("¿Quién escribió 'Ulises'?",
-                listOf("James Joyce", "Virginia Woolf", "T.S. Eliot", "Ernest Hemingway"), 0),
-            Question("¿Cuál es la partícula subatómica con carga negativa?",
-                listOf("Protón", "Neutrón", "Electrón", "Positrón"), 2)
-        )
+        // Obtener preguntas aleatorias de la BD según dificultad
+        return questionDAO.obtenerAleatoriasPorDificultad(difficulty, totalQuestions)
     }
 
     override fun onDestroy() {

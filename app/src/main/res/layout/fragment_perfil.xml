@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_morado_animado"
-    tools:context=".fragments.PerfilFragment">
+    tools:context=".ui.PerfilFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +14,7 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-
+        <!-- Título -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,7 +24,7 @@
             android:textColor="@color/white"
             android:layout_marginBottom="24dp" />
 
-
+        <!-- Card con Avatar -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,13 +36,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp"
-                android:gravity="center">
+                android:gravity="center"
+                android:padding="24dp">
 
                 <FrameLayout
                     android:layout_width="140dp"
                     android:layout_height="140dp">
-
 
                     <ImageView
                         android:id="@+id/ivProfileAvatar"
@@ -51,7 +51,6 @@
                         android:background="@drawable/bg_avatar_large"
                         android:scaleType="centerCrop"
                         android:contentDescription="Foto de perfil" />
-
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fabEditAvatar"
@@ -67,7 +66,6 @@
 
                 </FrameLayout>
 
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -75,12 +73,10 @@
                     android:text="Toca el ícono para cambiar foto"
                     android:textSize="12sp"
                     android:textColor="@color/gray_600" />
-
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
-
+        <!-- Datos del jugador -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,7 +90,7 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-
+                <!-- Nombre -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -131,9 +127,7 @@
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             android:layout_marginTop="4dp" />
-
                     </LinearLayout>
-
                 </LinearLayout>
 
                 <View
@@ -142,7 +136,7 @@
                     android:background="@color/gray_300"
                     android:layout_marginBottom="16dp" />
 
-
+                <!-- ID -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -174,21 +168,17 @@
                             android:id="@+id/tvProfileId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="D123453"
+                            android:text="P12345"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             android:layout_marginTop="4dp" />
-
                     </LinearLayout>
-
                 </LinearLayout>
-
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
-
+        <!-- Estadísticas -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -210,7 +200,7 @@
                     android:textColor="@color/black"
                     android:layout_marginBottom="16dp" />
 
-
+                <!-- Puntuación -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -244,17 +234,15 @@
                             android:id="@+id/tvProfileScore"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="123,454"
+                            android:text="0"
                             android:textSize="24sp"
                             android:textStyle="bold"
                             android:textColor="@color/gold"
                             android:layout_marginTop="4dp" />
-
                     </LinearLayout>
-
                 </LinearLayout>
 
-
+                <!-- Nivel -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -287,20 +275,14 @@
                             android:id="@+id/tvProfileLevel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Nivel Intermedio"
+                            android:text="Fácil"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:textColor="@color/primary"
                             android:layout_marginTop="4dp" />
-
                     </LinearLayout>
-
                 </LinearLayout>
-
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
-
     </LinearLayout>
-
 </ScrollView>

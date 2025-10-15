@@ -7,15 +7,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tuusuario.darfito.R
+import com.tuusuario.darfito.data.dao.UsuarioDAO
 import com.tuusuario.darfito.model.Player
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 
 class RankingAdapter(
     private val onPlayerClick: (Player) -> Unit
 ) : RecyclerView.Adapter<RankingAdapter.RankingViewHolder>() {
 
     private var players: List<Player> = emptyList()
+    private var usuarioDAO: UsuarioDAO? = null
 
     fun updatePlayers(newPlayers: List<Player>) {
         players = newPlayers
@@ -25,11 +27,18 @@ class RankingAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RankingViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_ranking, parent, false)
+
+        // Inicializar DAO si no existe
+        if (usuarioDAO == null) {
+            usuarioDAO = UsuarioDAO(parent.context)
+        }
+
         return RankingViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RankingViewHolder, position: Int) {
-        holder.bind(players[position], position + 4)
+        // Ahora la posición comienza desde 1 (primer lugar)
+        holder.bind(players[position], position + 1)
     }
 
     override fun getItemCount() = players.size
@@ -42,19 +51,29 @@ class RankingAdapter(
         private val tvPlayerScore: TextView = itemView.findViewById(R.id.tvPlayerScore)
 
         fun bind(player: Player, position: Int) {
-            tvPosition.text = position.toString()
-            tvPlayerName.text = player.name
+            // Mostrar posición con emoji para el top 3
+            tvPosition.text = when (position) {
+                1 -> "🥇"
+                2 -> "🥈"
+                3 -> "🥉"
+                else -> "$position°"
+            }
+
+            // Obtener nombre del usuario desde la BD
+            val usuario = usuarioDAO?.obtenerPorId(player.usuarioId)
+            tvPlayerName.text = usuario?.nombres ?: "Jugador ${player.usuarioId}"
+
             tvPlayerLevel.text = player.level
 
-
+            // Formatear score
             val formattedScore = NumberFormat.getNumberInstance(Locale.getDefault())
                 .format(player.score)
             tvPlayerScore.text = formattedScore
 
+            // Cargar avatar
+            ivAvatar.setImageResource(player.avatarResId)
 
-            ivAvatar.setImageResource(R.drawable.ic_person)
-
-
+            // Click listener
             itemView.setOnClickListener {
                 onPlayerClick(player)
             }

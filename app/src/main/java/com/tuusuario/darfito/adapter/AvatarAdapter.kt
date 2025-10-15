@@ -39,6 +39,5 @@ class AvatarAdapter(
                 onAvatarClick(avatarResId)
             }
         }
-
-        }
     }
+}

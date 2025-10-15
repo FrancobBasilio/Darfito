@@ -7,23 +7,23 @@
 
     <fragment
         android:id="@+id/solicitudFragment"
-        android:name="com.tuusuario.darfito.fragments.SolicitudFragment"
+        android:name="com.tuusuario.darfito.ui.SolicitudFragment"
         android:label="fragment_solicitud"
         tools:layout="@layout/fragment_solicitud" />
     <fragment
         android:id="@+id/perfilFragment"
-        android:name="com.tuusuario.darfito.fragments.PerfilFragment"
+        android:name="com.tuusuario.darfito.ui.PerfilFragment"
         android:label="fragment_perfil"
         tools:layout="@layout/fragment_perfil" />
     <fragment
         android:id="@+id/amigosFragment"
-        android:name="com.tuusuario.darfito.fragments.AmigosFragment"
+        android:name="com.tuusuario.darfito.ui.AmigosFragment"
         android:label="fragment_amigos"
         tools:layout="@layout/fragment_amigos" />
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.tuusuario.darfito.fragments.HomeFragment"
+        android:name="com.tuusuario.darfito.ui.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home" />
 

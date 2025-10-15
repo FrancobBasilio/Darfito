@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="300dp"
+    android:layout_height="440dp"
     android:orientation="vertical"
+    android:layout_gravity="center_vertical|center"
     android:background="@drawable/bg_dialog_rounded"
     android:padding="24dp">
 
@@ -30,7 +31,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
         android:src="@drawable/ic_person"
-        android:background="@drawable/bg_avatar_circle"
         android:padding="8dp"
         android:contentDescription="Avatar del jugador" />
 

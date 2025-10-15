@@ -13,8 +13,11 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.tuusuario.darfito.R
+import com.tuusuario.darfito.data.dao.UsuarioDAO
+import com.tuusuario.darfito.data.dao.PlayerDAO
 import com.tuusuario.darfito.model.Usuario
-import com.tuusuario.darfito.repo.UsuariosRepository
+import com.tuusuario.darfito.model.Player
 import java.util.regex.Pattern
 
 class RegistroActivity : AppCompatActivity() {
@@ -34,10 +37,17 @@ class RegistroActivity : AppCompatActivity() {
     private lateinit var cbTerminos: MaterialCheckBox
     private lateinit var btnGuardar: MaterialButton
 
+    // DAOs
+    private lateinit var usuarioDAO: UsuarioDAO
+    private lateinit var playerDAO: PlayerDAO  // ✅ AGREGAR ESTO
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_registro)
+
+        // Inicializar DAO
+        usuarioDAO = UsuarioDAO(this)
 
         inicializarVistas()
         configurarListeners()
@@ -92,7 +102,7 @@ class RegistroActivity : AppCompatActivity() {
         val confirmPassword = tietConfirmPassword.text.toString().trim()
         var error = false
 
-
+        // Validar nombre
         if (nombre.isEmpty()) {
             tilNombre.error = "Ingrese su nombre completo"
             error = true
@@ -103,18 +113,21 @@ class RegistroActivity : AppCompatActivity() {
             tilNombre.error = null
         }
 
-
+        // Validar correo
         if (correo.isEmpty()) {
             tilCorreo.error = "Ingrese un correo electrónico"
             error = true
         } else if (!validarFormatoCorreo(correo)) {
             tilCorreo.error = "Correo electrónico inválido"
             error = true
+        } else if (usuarioDAO.existeCorreo(correo)) {
+            tilCorreo.error = "Este correo ya está registrado"
+            error = true
         } else {
             tilCorreo.error = null
         }
 
-
+        // Validar password
         if (password.isEmpty()) {
             tilPassword.error = "Ingrese una contraseña"
             error = true
@@ -125,7 +138,7 @@ class RegistroActivity : AppCompatActivity() {
             tilPassword.error = null
         }
 
-
+        // Validar confirmación
         if (confirmPassword.isEmpty()) {
             tilConfirmPassword.error = "Confirme su contraseña"
             error = true
@@ -140,7 +153,6 @@ class RegistroActivity : AppCompatActivity() {
             Toast.makeText(this, "Seleccione un género", Toast.LENGTH_SHORT).show()
             error = true
         }
-
 
         if (!cbTerminos.isChecked) {
             Toast.makeText(this, "Debe aceptar los términos y condiciones", Toast.LENGTH_SHORT).show()
@@ -182,10 +194,9 @@ class RegistroActivity : AppCompatActivity() {
         val nombres = partesNombre.getOrNull(0) ?: nombre
         val apellidos = partesNombre.getOrNull(1) ?: ""
 
-
-        val nuevoId = UsuariosRepository.obtenerSiguienteId()
+        // Crear nuevo usuario (id = 0 porque es AUTOINCREMENT)
         val nuevoUsuario = Usuario(
-            codigo = nuevoId,
+            id = 0,
             nombres = nombres,
             apellidos = apellidos,
             correo = correo,
@@ -193,19 +204,26 @@ class RegistroActivity : AppCompatActivity() {
             genero = genero
         )
 
+        // Insertar usando DAO
+        val resultado = usuarioDAO.insertar(nuevoUsuario)
 
-        UsuariosRepository.agregarUsuario(nuevoUsuario)
+        if (resultado != -1L) {
+            Toast.makeText(
+                this,
+                "Cuenta creada exitosamente. Bienvenido $nombres",
+                Toast.LENGTH_LONG
+            ).show()
 
-        Toast.makeText(
-            this,
-            "Cuenta creada exitosamente. Bienvenido $nombres",
-            Toast.LENGTH_LONG
-        ).show()
-
-
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
-        finish()
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
+        } else {
+            Toast.makeText(
+                this,
+                "Error al crear la cuenta. Intente nuevamente",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }

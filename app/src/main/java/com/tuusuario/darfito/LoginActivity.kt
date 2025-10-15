@@ -3,6 +3,7 @@ package com.tuusuario.darfito
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -13,7 +14,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.tuusuario.darfito.repo.UsuariosRepository
+
+
+import com.tuusuario.darfito.data.dao.UsuarioDAO
 
 class LoginActivity : AppCompatActivity() {
 
@@ -24,10 +27,16 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var tilClave: TextInputLayout
     private lateinit var btnAcceso: Button
 
+    // DAO
+    private lateinit var usuarioDAO: UsuarioDAO
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_login)
+
+        // Inicializar DAO
+        usuarioDAO = UsuarioDAO(this)
 
         inicializarVistas()
         configurarListeners()
@@ -94,19 +103,27 @@ class LoginActivity : AppCompatActivity() {
     private fun iniciarSesion(correo: String, clave: String) {
         Toast.makeText(this, "Validando datos...", Toast.LENGTH_SHORT).show()
 
-        val usuarioEncontrado = UsuariosRepository.buscarUsuario(correo, clave)
+        // Usar DAO en lugar de Repository
+        val usuarioEncontrado = usuarioDAO.buscarUsuario(correo, clave)
 
         if (usuarioEncontrado != null) {
-                Toast.makeText(
-                    this,
-                    "Bienvenido ${usuarioEncontrado.nombres}",
-                    Toast.LENGTH_LONG
-                ).show()
-                val intent = Intent(this, HomeActivity::class.java).apply {
-                    putExtra("usuario_id", usuarioEncontrado.codigo)
-                    putExtra("usuario_nombre", usuarioEncontrado.nombres)
+            // DEBUG
+            Log.d("LOGIN_DEBUG", "Usuario encontrado - ID: ${usuarioEncontrado.id}, Nombre: ${usuarioEncontrado.nombres}")
 
+
+            Toast.makeText(
+                this,
+                "Bienvenido ${usuarioEncontrado.nombres}",
+                Toast.LENGTH_LONG
+            ).show()
+
+            val intent = Intent(this, HomeActivity::class.java).apply {
+                putExtra("usuario_id", usuarioEncontrado.id)
+                putExtra("usuario_nombre", usuarioEncontrado.nombres)
             }
+            // DEBUG
+            Log.d("LOGIN_DEBUG", "Enviando a Home con usuario_id: ${usuarioEncontrado.id}")
+
             startActivity(intent)
             finish()
         } else {
@@ -120,29 +137,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun cambioActivity(activityDestino: Class<out Activity>) {
         val intent = Intent(this, activityDestino)
-        startActivity(intent)
-    }
-
-    private fun abrirVentanaNavegador() {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = "http://www.google.com".toUri()
-        startActivity(intent)
-    }
-
-    private fun abrirBuscadorWeb() {
-        val intent = Intent(Intent.ACTION_WEB_SEARCH)
-        intent.data = "http://www.google.com".toUri()
-        startActivity(intent)
-    }
-
-    private fun abrirLlamada() {
-        val intent = Intent(Intent.ACTION_DIAL)
-        startActivity(intent)
-    }
-
-    private fun llamar() {
-        val intent = Intent(Intent.ACTION_CALL)
-        intent.data = "tel:+51999999999".toUri()
         startActivity(intent)
     }
 }

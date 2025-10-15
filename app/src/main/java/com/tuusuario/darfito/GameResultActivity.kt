@@ -2,11 +2,16 @@ package com.tuusuario.darfito
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.google.android.material.button.MaterialButton
+import com.tuusuario.darfito.R
+import com.tuusuario.darfito.data.dao.PlayerDAO
 import com.tuusuario.darfito.model.GameDifficulty
+import com.tuusuario.darfito.model.Player
 
 class GameResultActivity : AppCompatActivity() {
 
@@ -25,14 +30,22 @@ class GameResultActivity : AppCompatActivity() {
     private var correctAnswers: Int = 0
     private var totalQuestions: Int = 0
     private lateinit var difficulty: GameDifficulty
+    private var usuarioId: Int = -1
+
+    // DAO
+    private lateinit var playerDAO: PlayerDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_result)
 
+        // Inicializar DAO
+        playerDAO = PlayerDAO(this)
+
         initViews()
         getResultData()
         displayResults()
+        actualizarScoreJugador()
         setupClickListeners()
     }
 
@@ -55,13 +68,15 @@ class GameResultActivity : AppCompatActivity() {
         totalQuestions = intent.getIntExtra("TOTAL_QUESTIONS", 0)
         val difficultyName = intent.getStringExtra("DIFFICULTY") ?: "EASY"
         difficulty = GameDifficulty.valueOf(difficultyName)
+        usuarioId = intent.getIntExtra("USUARIO_ID", -1)
+
+        // DEBUG
+        Log.d("RESULT_DEBUG", "USUARIO_ID recibido: $usuarioId")
+        Toast.makeText(this, "Result - Usuario ID: $usuarioId, Score: $score", Toast.LENGTH_LONG).show()
     }
 
     private fun displayResults() {
-
         tvFinalScore.text = score.toString()
-
-
         tvCorrectAnswers.text = "$correctAnswers/$totalQuestions"
 
         val accuracyPercentage = if (totalQuestions > 0) {
@@ -70,7 +85,6 @@ class GameResultActivity : AppCompatActivity() {
         tvAccuracyPercentage.text = "$accuracyPercentage%"
 
         tvDifficultyLevel.text = difficulty.displayName.uppercase()
-
 
         val title = when {
             accuracyPercentage >= 90 -> "🏆 ¡PERFECTO!"
@@ -81,8 +95,59 @@ class GameResultActivity : AppCompatActivity() {
         }
         tvResultTitle.text = title
 
-
         generateAchievements(accuracyPercentage)
+    }
+
+    private fun actualizarScoreJugador() {
+        if (usuarioId == -1) {
+            Toast.makeText(this, "Error: Usuario no identificado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val player = playerDAO.buscarPorUsuarioId(usuarioId)
+
+        if (player != null) {
+            // Calcular nuevo score
+            val nuevoScore = player.score + score
+
+            // Determinar nuevo nivel basado en el score total
+            val nuevoNivel = determinarNivel(nuevoScore)
+
+            // Actualizar PLAYER COMPLETO (score + level)
+            val playerActualizado = player.copy(
+                score = nuevoScore,
+                level = nuevoNivel
+            )
+
+            val rowsAffected = playerDAO.actualizar(playerActualizado)
+
+            if (rowsAffected > 0) {
+                Toast.makeText(
+                    this,
+                    "Score: $nuevoScore (+$score) - $nuevoNivel",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
+            // Si no existe player, crearlo
+            val nuevoPlayer = Player(
+                id = "0",
+                usuarioId = usuarioId,
+                score = score,
+                level = determinarNivel(score),
+                avatarResId = R.drawable.ic_person
+            )
+            playerDAO.insertar(nuevoPlayer)
+            Toast.makeText(this, "Perfil creado. Score: $score", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun determinarNivel(score: Int): String {
+        return when {
+            score >= 500 -> "Nivel Experto"
+            score >= 300 -> "Nivel Avanzado"
+            score >= 150 -> "Nivel Intermedio"
+            else -> "Nivel Básico"
+        }
     }
 
     private fun generateAchievements(accuracy: Int) {
@@ -104,27 +169,33 @@ class GameResultActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         btnPlayAgain.setOnClickListener {
-
             val intent = Intent(this, TriviaGameActivity::class.java).apply {
                 putExtra("DIFFICULTY", difficulty.name)
                 putExtra("TIME_LIMIT", difficulty.timeLimit)
                 putExtra("POINTS_PER_QUESTION", difficulty.pointsPerQuestion)
                 putExtra("TOTAL_QUESTIONS", difficulty.totalQuestions)
+                putExtra("USUARIO_ID", usuarioId)
             }
             startActivity(intent)
             finish()
         }
 
         btnViewRanking.setOnClickListener {
-
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, HomeActivity::class.java).apply {
+                putExtra("usuario_id", usuarioId)
+                // Usar FLAG_ACTIVITY_CLEAR_TOP para volver al Home existente
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
             startActivity(intent)
             finish()
         }
 
         btnBackToHome.setOnClickListener {
-
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, HomeActivity::class.java).apply {
+                putExtra("usuario_id", usuarioId)
+                // Usar FLAG_ACTIVITY_CLEAR_TOP para volver al Home existente
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
             startActivity(intent)
             finish()
         }
