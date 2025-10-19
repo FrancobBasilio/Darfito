@@ -74,6 +74,9 @@ class SolicitudDAO(context: Context) {
         return solicitudes
     }
 
+
+
+
     /**
      * ACEPTAR SOLICITUD
      */
@@ -92,6 +95,7 @@ class SolicitudDAO(context: Context) {
 
         return rowsAffected > 0
     }
+
 
     /**
      * RECHAZAR SOLICITUD
@@ -123,7 +127,7 @@ class SolicitudDAO(context: Context) {
     /**
      * VERIFICAR SI EXISTE SOLICITUD PENDIENTE
      */
-    private fun existeSolicitudPendiente(usuarioEnviaId: Int, usuarioRecibeId: Int): Boolean {
+     fun existeSolicitudPendiente(usuarioEnviaId: Int, usuarioRecibeId: Int): Boolean {
         val db = dbHelper.readableDatabase
         val cursor = db.query(
             "solicitud",

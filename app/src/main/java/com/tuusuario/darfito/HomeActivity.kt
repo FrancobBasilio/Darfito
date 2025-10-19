@@ -57,7 +57,7 @@ class HomeActivity : AppCompatActivity() {
         initViews()
         setupBienvenida()
         setupNavigation()
-        setupNavigationHeader()  // ✅ NUEVO
+        setupNavigationHeader()
         setupClickListeners()
         setupBackPressed()
     }
@@ -95,7 +95,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     /**
-     * ✅ NUEVO: Configurar el header del NavigationView con datos del usuario
+     *  Configurar el header del NavigationView con datos del usuario
      */
     private fun setupNavigationHeader() {
         val headerView = nv_side.getHeaderView(0)
@@ -151,7 +151,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupBienvenida() {
-        tvBienvenida.text = "Bienvenido a Trivia, $usuarioNombre"
+        tvBienvenida.text = "Bienvenido a Darfito, $usuarioNombre"
     }
 
     private fun mostrarDialogoCerrarSesion() {
@@ -186,13 +186,7 @@ class HomeActivity : AppCompatActivity() {
         return usuarioId
     }
 
-    fun obtenerUsuarioNombre(): String {
-        return usuarioNombre
-    }
 
-    /**
-     * ✅ NUEVO: Método público para actualizar el header desde fragments
-     */
     fun actualizarHeader() {
         setupNavigationHeader()
     }
@@ -213,7 +207,7 @@ class HomeActivity : AppCompatActivity() {
             }
 
             setupBienvenida()
-            setupNavigationHeader()  // ✅ Actualizar header también
+            setupNavigationHeader()
         }
     }
 }

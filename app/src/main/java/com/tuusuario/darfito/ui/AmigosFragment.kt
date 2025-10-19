@@ -109,8 +109,7 @@ class AmigosFragment : Fragment() {
     }
 
     private fun iniciarPartidaMultijugador(usuario: Usuario, player: Player?) {
-        // TODO: Implementar sistema de partidas multijugador
-        // Por ahora mostrar mensaje informativo
+        //Mostrar mensaje informativo
         AlertDialog.Builder(requireContext())
             .setTitle("🎮 Partida Multijugador")
             .setMessage("¿Deseas desafiar a ${usuario.nombres} a una partida?\n\n" +
@@ -124,7 +123,6 @@ class AmigosFragment : Fragment() {
                 ).show()
                 dialog.dismiss()
 
-                // AQUÍ puedes redirigir a una nueva Activity de multijugador:
                 // val intent = Intent(requireContext(), MultiplayerGameActivity::class.java)
                 // intent.putExtra("OPONENTE_ID", usuario.id)
                 // startActivity(intent)

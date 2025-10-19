@@ -53,29 +53,6 @@ class UsuarioDAO(context: Context) {
         return usuario
     }
 
-    /**
-     * OBTENER TODOS LOS USUARIOS
-     */
-    fun obtenerTodos(): List<Usuario> {
-        val db = dbHelper.readableDatabase
-        val cursor = db.query("usuario", null, null, null, null, null, null)
-        val usuarios = mutableListOf<Usuario>()
-
-        while (cursor.moveToNext()) {
-            usuarios.add(
-                Usuario(
-                    id = cursor.getInt(cursor.getColumnIndexOrThrow("id_usuario")),
-                    nombres = cursor.getString(cursor.getColumnIndexOrThrow("nombres")),
-                    apellidos = cursor.getString(cursor.getColumnIndexOrThrow("apellidos")),
-                    correo = cursor.getString(cursor.getColumnIndexOrThrow("correo")),
-                    clave = cursor.getString(cursor.getColumnIndexOrThrow("clave")),
-                    genero = cursor.getString(cursor.getColumnIndexOrThrow("genero"))
-                )
-            )
-        }
-        cursor.close()
-        return usuarios
-    }
 
     /**
      * VERIFICAR SI EXISTE CORREO (PARA REGISTRO)
@@ -93,8 +70,6 @@ class UsuarioDAO(context: Context) {
         cursor.close()
         return existe
     }
-
-    // Agregar este método a UsuarioDAO.kt
 
     /**
      * OBTENER USUARIO POR ID
@@ -124,18 +99,5 @@ class UsuarioDAO(context: Context) {
         return usuario
     }
 
-    /**
-     * ACTUALIZAR USUARIO
-     */
-    fun actualizar(usuario: Usuario): Int {
-        val db = dbHelper.writableDatabase
-        val valores = ContentValues().apply {
-            put("nombres", usuario.nombres)
-            put("apellidos", usuario.apellidos)
-            put("correo", usuario.correo)
-            put("clave", usuario.clave)
-            put("genero", usuario.genero)
-        }
-        return db.update("usuario", valores, "id_usuario = ?", arrayOf(usuario.id.toString()))
-    }
+
 }

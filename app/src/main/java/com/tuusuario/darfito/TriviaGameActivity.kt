@@ -51,7 +51,7 @@ class TriviaGameActivity : AppCompatActivity() {
     private var isAnswerSelected = false
     private var remainingTimeInSeconds: Int = 0
     private val timeBonusForCorrectAnswer: Int = 5
-    private var usuarioId: Int = -1  // ✅ AGREGAR ESTO
+    private var usuarioId: Int = -1  // AGREGAR ESTO
 
     // DAO
     private lateinit var questionDAO: QuestionDAO
@@ -100,10 +100,7 @@ class TriviaGameActivity : AppCompatActivity() {
 
         usuarioId = intent.getIntExtra("USUARIO_ID", -1)
 
-        // DEBUG
-        Log.d("TRIVIA_DEBUG", "USUARIO_ID recibido: $usuarioId")
-        // DEBUG
-        Toast.makeText(this, "Trivia - usuarioId: $usuarioId", Toast.LENGTH_LONG).show()
+
     }
 
     private fun initializeGame() {

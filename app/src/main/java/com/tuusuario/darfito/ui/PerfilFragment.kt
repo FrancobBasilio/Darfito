@@ -190,7 +190,7 @@ class PerfilFragment : Fragment() {
             if (rowsAffected > 0) {
                 currentPlayer = updatedPlayer
 
-                // ✅ ACTUALIZAR EL HEADER DEL MENU
+                // ACTUALIZAR EL HEADER DEL MENU
                 (activity as? HomeActivity)?.actualizarHeader()
 
                 Toast.makeText(

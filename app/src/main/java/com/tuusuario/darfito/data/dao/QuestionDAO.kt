@@ -97,28 +97,7 @@ class QuestionDAO(context: Context) {
         return todasLasPreguntas.shuffled().take(cantidad)
     }
 
-    /**
-     * ELIMINAR PREGUNTA
-     */
-    fun eliminar(questionId: Int): Int {
-        val db = dbHelper.writableDatabase
-        return db.delete("question", "id_question = ?", arrayOf(questionId.toString()))
-    }
 
-    /**
-     * ACTUALIZAR PREGUNTA
-     */
-    fun actualizar(question: Question): Int {
-        val db = dbHelper.writableDatabase
-        val valores = ContentValues().apply {
-            put("text", question.text)
-            put("options", question.options.joinToString("|||"))
-            put("correctAnswer", question.correctAnswer)
-            put("category", question.category)
-            put("difficulty", question.difficulty.name)
-        }
-        return db.update("question", valores, "id_question = ?", arrayOf(question.id.toString()))
-    }
 
     /**
      * INICIALIZAR BASE DE DATOS CON PREGUNTAS

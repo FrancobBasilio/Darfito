@@ -29,12 +29,6 @@ class GameModeActivity : AppCompatActivity() {
         usuarioId = intent.getIntExtra("usuario_id", -1)
 
 
-        // DEBUG
-        Log.d("GAMEMODE_DEBUG", "usuario_id recibido: $usuarioId")
-        // DEBUG
-        Toast.makeText(this, "GameMode - usuarioId: $usuarioId", Toast.LENGTH_LONG).show()
-
-
         initViews()
         setupClickListeners()
     }

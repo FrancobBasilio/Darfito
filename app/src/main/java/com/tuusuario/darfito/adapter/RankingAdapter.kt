@@ -13,8 +13,7 @@ import java.text.NumberFormat
 import java.util.Locale
 
 class RankingAdapter(
-    private val onPlayerClick: (Player) -> Unit
-) : RecyclerView.Adapter<RankingAdapter.RankingViewHolder>() {
+    private val onPlayerClick: (Player) -> Unit) : RecyclerView.Adapter<RankingAdapter.RankingViewHolder>() {
 
     private var players: List<Player> = emptyList()
     private var usuarioDAO: UsuarioDAO? = null
@@ -28,7 +27,7 @@ class RankingAdapter(
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_ranking, parent, false)
 
-        // Inicializar DAO si no existe
+        // Inicializar DAO
         if (usuarioDAO == null) {
             usuarioDAO = UsuarioDAO(parent.context)
         }
@@ -37,7 +36,7 @@ class RankingAdapter(
     }
 
     override fun onBindViewHolder(holder: RankingViewHolder, position: Int) {
-        // Ahora la posición comienza desde 1 (primer lugar)
+        // La posición comienza desde 1 (primer lugar)
         holder.bind(players[position], position + 1)
     }
 
@@ -51,7 +50,7 @@ class RankingAdapter(
         private val tvPlayerScore: TextView = itemView.findViewById(R.id.tvPlayerScore)
 
         fun bind(player: Player, position: Int) {
-            // Mostrar posición con emoji para el top 3
+            // Mostrar posición para el top 3
             tvPosition.text = when (position) {
                 1 -> "🥇"
                 2 -> "🥈"

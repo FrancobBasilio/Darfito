@@ -70,9 +70,6 @@ class GameResultActivity : AppCompatActivity() {
         difficulty = GameDifficulty.valueOf(difficultyName)
         usuarioId = intent.getIntExtra("USUARIO_ID", -1)
 
-        // DEBUG
-        Log.d("RESULT_DEBUG", "USUARIO_ID recibido: $usuarioId")
-        Toast.makeText(this, "Result - Usuario ID: $usuarioId, Score: $score", Toast.LENGTH_LONG).show()
     }
 
     private fun displayResults() {

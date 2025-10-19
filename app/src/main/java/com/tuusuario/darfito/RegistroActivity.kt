@@ -39,7 +39,7 @@ class RegistroActivity : AppCompatActivity() {
 
     // DAOs
     private lateinit var usuarioDAO: UsuarioDAO
-    private lateinit var playerDAO: PlayerDAO  // ✅ AGREGAR ESTO
+    private lateinit var playerDAO: PlayerDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

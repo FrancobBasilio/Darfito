@@ -151,12 +151,21 @@ class PlayerProfileDialogFragment : DialogFragment() {
                 return
             }
 
+            if (solicitudDAO.existeSolicitudPendiente(usuarioActualId, p.usuarioId)) {
+                estadoAmistad = EstadoAmistad.SOLICITUD_ENVIADA
+                btnFollow.text = "PENDIENTE"
+                btnFollow.setIconResource(R.drawable.ic_check)
+                btnFollow.isEnabled = false
+                return
+            }
+
+
             // Verificar si ya existe solicitud pendiente
-            // (Esto requeriría agregar un método al DAO)
-            estadoAmistad = EstadoAmistad.PUEDE_ENVIAR
-            btnFollow.text = "SEGUIR"
-            btnFollow.setIconResource(R.drawable.ic_add)
-            btnFollow.isEnabled = true
+                estadoAmistad = EstadoAmistad.PUEDE_ENVIAR
+                btnFollow.text = "SEGUIR"
+                btnFollow.setIconResource(R.drawable.ic_add)
+                btnFollow.isEnabled = true
+
         }
     }
 

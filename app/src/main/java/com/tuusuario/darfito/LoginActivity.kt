@@ -58,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun configurarListeners() {
+
         btnAcceso.setOnClickListener {
             validarCampos()
         }
@@ -69,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
         tietCorreo.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) tilCorreo.error = null
         }
+
         tietClave.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) tilClave.error = null
         }
@@ -103,13 +105,10 @@ class LoginActivity : AppCompatActivity() {
     private fun iniciarSesion(correo: String, clave: String) {
         Toast.makeText(this, "Validando datos...", Toast.LENGTH_SHORT).show()
 
-        // Usar DAO en lugar de Repository
+        // Usar DAO
         val usuarioEncontrado = usuarioDAO.buscarUsuario(correo, clave)
 
         if (usuarioEncontrado != null) {
-            // DEBUG
-            Log.d("LOGIN_DEBUG", "Usuario encontrado - ID: ${usuarioEncontrado.id}, Nombre: ${usuarioEncontrado.nombres}")
-
 
             Toast.makeText(
                 this,
@@ -121,8 +120,6 @@ class LoginActivity : AppCompatActivity() {
                 putExtra("usuario_id", usuarioEncontrado.id)
                 putExtra("usuario_nombre", usuarioEncontrado.nombres)
             }
-            // DEBUG
-            Log.d("LOGIN_DEBUG", "Enviando a Home con usuario_id: ${usuarioEncontrado.id}")
 
             startActivity(intent)
             finish()
